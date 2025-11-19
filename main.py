@@ -1,27 +1,15 @@
-import subprocess
-import os
+from flask import Flask
 
-def start_linux_xfce():
-    # Pull a lightweight Linux image (Debian slim)
-    subprocess.run(["docker", "pull", "dorowu/ubuntu-desktop-lxde-vnc"], check=True)
+app = Flask(__name__)
 
-    # Run container with VNC exposed
-    subprocess.run([
-        "docker", "run", "-d",
-        "-p", "6080:80",  # Web VNC access
-        "--name", "linux_xfce",
-        "dorowu/ubuntu-desktop-lxde-vnc"
-    ], check=True)
-
-    print("Minimal Linux with XFCE-like desktop is running at http://localhost:6080")
-
-def stop_linux_xfce():
-    subprocess.run(["docker", "stop", "linux_xfce"], check=True)
-    subprocess.run(["docker", "rm", "linux_xfce"], check=True)
-    print("Linux XFCE environment stopped and removed.")
+@app.route("/")
+def home():
+    return """
+    <h1>Linux XFCE + Web VNC</h1>
+    <p>Click below to access the desktop:</p>
+    <a href="/vnc.html" target="_blank">Open Desktop</a>
+    """
 
 if __name__ == "__main__":
-    if not os.environ.get("STOP"):
-        start_linux_xfce()
-    else:
-        stop_linux_xfce()
+    # Run Flask on port 5000 (internal)
+    app.run(host="0.0.0.0", port=5000)
