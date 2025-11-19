@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: xfce-vnc-service
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    ports:
+      - port: 6080
+        protocol: tcp
